@@ -24,15 +24,15 @@ jr z,ShowUsage
 bit 0,a
 jr nz,ShowUsage
 
-rrca                       ; Divide test cases by 2 since we are checking pairs
+rrca               ; Divide test cases by 2 since we are checking pairs
 ld (NTestCases), a ; Save number of test cases
 
 ; Start comparison
 CompareLoop:
-  ld a,(IX)   ; Get first parameter
+  ld a,(IX) ; Get first parameter
   cp (IX+2) ; Compare with the following parameter
   
-  call p, PrintA   ; If positive result, A was larger
+  call p, PrintA  ; If positive result, A was larger
   call m, PrintIX ; Else negative; following was larger
 
   ; Prepare for next pair
@@ -61,9 +61,9 @@ ShowUsageMsg:
 PrintStr:
   ld a,(HL) ; Load address of string to A
   cp 255 
-  ret z           ; If we reached 255, that's the end of the string
+  ret z     ; If we reached 255, that's the end of the string
   call &BB5A
-  inc HL         ; Go to next character
+  inc HL    ; Go to next character
 jr PrintStr
 
 PrintIX:
@@ -73,18 +73,17 @@ PrintA:
   ;bit 0,b ; Force H flag to be set. 
   daa ; Adjust A for BCD
 
-  push AF ; Save A
-    ; Isolate top nibble
-    and %11110000
+  push AF         ; Save A
+    
+    and %11110000 ; Isolate top nibble
     ; Shift to bottom nibble
     rrca
     rrca
     rrca
     rrca
-    add &30 ; Start at 30h of the CPC ASCII Table
-    call &BB5A ; BIOS TXT_OUTPUT
-  ; Restore A
-  pop AF
+    add &30       ; Start at 30h of the CPC ASCII Table
+    call &BB5A    ; BIOS TXT_OUTPUT
+  pop AF          ; Restore A
   ; Isolate bottom nibble
   and %00001111
   add &30
